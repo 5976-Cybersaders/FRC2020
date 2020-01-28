@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -29,6 +30,11 @@ public class MaintainShooterWheelSpeed extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    /* Factory Default all hardware to prevent unexpected behaviour */
+    getTalon().configFactoryDefault();
+
+    /* Config sensor used for Primary PID [Velocity] */
+    getTalon().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,Constants.kPIDLoopIdx, Constants.kTimeoutMs);
     getTalon().setSensorPhase(true);
 
 		/* Config the peak and nominal outputs */
@@ -50,7 +56,7 @@ public class MaintainShooterWheelSpeed extends CommandBase {
   @Override
   public void execute() {
     double motorOutput = getTalon().getMotorOutputPercent();
-    double targetVelocityUnitsPer100ms = desiredVelocity * 500.0 * 4096 / 600;
+    double targetVelocityUnitsPer100ms = desiredVelocity * 4096 / 600;
     getTalon().set(ControlMode.Velocity, targetVelocityUnitsPer100ms);
   }
 
