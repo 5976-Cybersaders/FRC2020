@@ -7,13 +7,20 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ShooterPosition extends SubsystemBase {
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
+public class ShooterPositionSubsystem extends SubsystemBase {
   /**
    * Creates a new ShooterPosition.
    */
-  public ShooterPosition() {
+  private Talon shooterPositioner;
+  //private Spark sparkPositioner;
+
+  public ShooterPositionSubsystem() {
+    shooterPositioner = new Talon(Constants.SHOOTER_POSITIONER_TALON_ID);
 
   }
 
@@ -21,4 +28,9 @@ public class ShooterPosition extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public Talon getShooterPositioner(){
+    return shooterPositioner;
+  }
+
 }

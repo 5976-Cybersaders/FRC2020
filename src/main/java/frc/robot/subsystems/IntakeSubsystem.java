@@ -7,18 +7,29 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-public class Intake extends SubsystemBase {
-  /**
-   * Creates a new Intake.
-   */
-  public Intake() {
-
+public class IntakeSubsystem extends SubsystemBase {
+  private Talon intakeMotor, conveyorMotor;
+  
+  public IntakeSubsystem() {
+    intakeMotor = new Talon(Constants.INTAKE_TALON_ID);
+    conveyorMotor = new Talon(Constants.INTAKE_CONVEYOR_TALON_ID);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public Talon getIntakeMotor(){
+    return intakeMotor;
+  }
+
+  public Talon getConveyorMotor(){
+    return conveyorMotor;
+  }
+
 }

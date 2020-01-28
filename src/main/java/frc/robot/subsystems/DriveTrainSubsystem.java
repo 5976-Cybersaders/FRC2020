@@ -8,23 +8,34 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
-  private WPI_TalonSRX rightMaster, rightSlave;
-  private WPI_TalonSRX leftMaster, leftSlave;
+  private WPI_TalonSRX rightMaster, leftMaster;
+  private WPI_VictorSPX rightSlave, leftSlave;
+
+  private SpeedControllerGroup leftSide, rightSide;
+  private static double expoFactor = 0.2; 
 
   /**
    * Creates a new DriveTrainSubsystem.
    */
   public DriveTrainSubsystem() {
     rightMaster = new WPI_TalonSRX(Constants.RIGHT_MASTER_TALON_ID);
-    rightSlave  = new WPI_TalonSRX(Constants.RIGHT_SLAVE_TALON_ID);
+    rightSlave  = new WPI_VictorSPX(Constants.RIGHT_SLAVE_TALON_ID);
     leftMaster  = new WPI_TalonSRX(Constants.LEFT_MASTER_TALON_ID);
-    leftSlave   = new WPI_TalonSRX(Constants.LEFT_SLAVE_TALON_ID);
+    leftSlave   = new WPI_VictorSPX(Constants.LEFT_SLAVE_TALON_ID);
+
+    //grouping master and slave
+    rightSide = new SpeedControllerGroup(rightMaster,rightSlave);
+    leftSide = new SpeedControllerGroup(leftMaster, leftSlave);
+
+
   }
 
 
@@ -32,4 +43,23 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public void drive(double leftSpeed, double rightSpeed) {
+    leftSide.set(adjustSpeed(leftSpeed));
+    rightSide.set(adjustSpeed(rightSpeed));
+  }
+
+  private double adjustSpeed(double d) {
+    if (Math.abs(d) < 0.03) return 0;
+    return Math.signum(d) * Math.pow(Math.abs(d), Math.pow(4, expoFactor));
+  }
+  
+  public WPI_TalonSRX getLeftMaster() { return this.leftMaster; }
+  public WPI_VictorSPX getLeftSlave() { return this.leftSlave; }
+  public WPI_TalonSRX getRightMaster() { return this.rightMaster; }
+  public WPI_VictorSPX getRightSlave() { return this.rightSlave; }
+  
+  public SpeedControllerGroup getLeftSide() { return this.leftSide; }
+  public SpeedControllerGroup getRightSide() { return this.rightSide; }
+
 }
