@@ -8,20 +8,25 @@
 package frc.robot.subsystems;
 
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterPositionSubsystem extends SubsystemBase {
+  
   /**
    * Creates a new ShooterPosition.
    */
   private Talon shooterPositioner;
+  private DigitalInput forwardLimitSwitch;
+  private DigitalInput reverseLimitSwitch;
   //private Spark sparkPositioner;
 
   public ShooterPositionSubsystem() {
     shooterPositioner = new Talon(Constants.SHOOTER_POSITIONER_TALON_ID);
-
+    forwardLimitSwitch = new DigitalInput(1);
+    reverseLimitSwitch = new DigitalInput(2);
   }
 
   @Override
@@ -32,5 +37,12 @@ public class ShooterPositionSubsystem extends SubsystemBase {
   public Talon getShooterPositioner(){
     return shooterPositioner;
   }
+  
+  public DigitalInput getReverseLimitSwitch(){
+    return reverseLimitSwitch;
+  }
 
+  public DigitalInput getForwardLimitSwitch(){
+    return forwardLimitSwitch;
+  }
 }
