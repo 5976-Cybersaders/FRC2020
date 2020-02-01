@@ -9,8 +9,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.autonomous.AutoShootHighThenCrossLineCommand;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterPositionSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -21,11 +26,16 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final XboxController xboxController = null;
 
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final ShooterPositionSubsystem shooterPositionSubsystem = new ShooterPositionSubsystem();
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
+  private final AutoShootHighThenCrossLineCommand autoShootHighThenCrossLineCommand = new AutoShootHighThenCrossLineCommand();
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -51,7 +61,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return autoShootHighThenCrossLineCommand;
   }
 }
