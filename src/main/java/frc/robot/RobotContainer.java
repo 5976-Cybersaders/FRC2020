@@ -7,16 +7,23 @@
 
 package frc.robot;
 
+import java.util.function.Consumer;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.XBoxButton.RawButton;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.MasterSlaveTestCommand;
+import frc.robot.commands.TeleOpTankDrive;
 import frc.robot.commands.autonomous.AutoShootHighThenCrossLineCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.MasterSlaveTestSubsystem;
 import frc.robot.subsystems.ShooterPositionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -27,13 +34,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final XboxController xboxController = null;
+  private final XboxController primaryController = new XboxController(0);
+  private final XboxController secondaryController = new XboxController(1);
+  private final boolean driveTrainEnabled = false;
+  private final boolean climberEnabled = false;
+  private final boolean intakeEnabled = false;
+  private final boolean shooterPositionEnabled = false;
+  private final boolean shooterEnabled = false;
+  private final boolean masterSlaveTestEnabled = true;
 
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final ShooterPositionSubsystem shooterPositionSubsystem = new ShooterPositionSubsystem();
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final ClimberSubsystem climberSubsystem;
+  private final DriveTrainSubsystem driveTrainSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
+  private final ShooterPositionSubsystem shooterPositionSubsystem;
+  private final ShooterSubsystem shooterSubsystem;
+  private final MasterSlaveTestSubsystem testSubsystem;
 
   private final AutoShootHighThenCrossLineCommand autoShootHighThenCrossLineCommand = new AutoShootHighThenCrossLineCommand();
 
@@ -42,8 +57,41 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
+    if (driveTrainEnabled) {
+      driveTrainSubsystem = new DriveTrainSubsystem();
+      driveTrainSubsystem.setDefaultCommand(new TeleOpTankDrive(primaryController, driveTrainSubsystem));
+    } else {
+      driveTrainSubsystem = null;
+    }
+    if (climberEnabled) {
+      climberSubsystem= new ClimberSubsystem();
+    } else {
+      climberSubsystem = null;
+    }
+    if (intakeEnabled) {
+      intakeSubsystem= new IntakeSubsystem();
+    } else {
+      intakeSubsystem = null;
+    }
+    if (shooterPositionEnabled) {
+      shooterPositionSubsystem= new ShooterPositionSubsystem();
+    } else {
+      shooterPositionSubsystem = null;
+    }
+    if (shooterEnabled) {
+      shooterSubsystem= new ShooterSubsystem();
+    } else {
+      shooterSubsystem = null;
+    }
+    if (masterSlaveTestEnabled) {
+      testSubsystem = new MasterSlaveTestSubsystem();
+    } else {
+      testSubsystem = null;
+    }
+    
     configureButtonBindings();
   }
+
 
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
@@ -52,6 +100,12 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    if (masterSlaveTestEnabled) {
+      XBoxButton testButton = new XBoxButton(primaryController, RawButton.Y);
+      Command c = new MasterSlaveTestCommand(testSubsystem, 400);
+      testButton.whileHeld(c);
+      System.out.println("bound successfully");
+    }
   }
 
 

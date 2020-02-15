@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,8 +23,8 @@ import java.util.Arrays;
 public class DriveTrainSubsystem extends SubsystemBase {
 
   private WPI_TalonSRX rightMaster, leftMaster;
-  private WPI_VictorSPX rightSlave, leftSlave;
-
+  private BaseMotorController rightSlave, leftSlave;
+  //private WPI_VictorSPX rightSlave, leftSlave;
   private SpeedControllerGroup leftSide, rightSide;//set control group
   private static double expoFactor = 0.2; 
 
@@ -37,12 +38,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public DriveTrainSubsystem() {
     rightMaster = new WPI_TalonSRX(Constants.RIGHT_MASTER_TALON_ID);
     leftMaster = new WPI_TalonSRX(Constants.LEFT_MASTER_TALON_ID);
-    rightSlave  = new WPI_VictorSPX(Constants.RIGHT_SLAVE_TALON_ID);
-    leftSlave   = new WPI_VictorSPX(Constants.LEFT_SLAVE_TALON_ID);
-
+    rightSlave  = new WPI_TalonSRX(Constants.RIGHT_SLAVE_TALON_ID);
+    leftSlave   = new WPI_TalonSRX(Constants.LEFT_SLAVE_TALON_ID);
     //grouping master and slave
-    rightSide = new SpeedControllerGroup(rightMaster, rightSlave);
-    leftSide = new SpeedControllerGroup(leftMaster, leftSlave);
+    rightSide = new SpeedControllerGroup(rightMaster, (SpeedController)rightSlave);
+    leftSide = new SpeedControllerGroup(leftMaster, (SpeedController)leftSlave);
 
     //creating Arrays/individual list
     rightControllers = Arrays.asList(rightMaster, rightSlave);
@@ -66,9 +66,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
   
   public WPI_TalonSRX getLeftMaster() { return this.leftMaster; }
-  public WPI_VictorSPX getLeftSlave() { return this.leftSlave; }
+  public BaseMotorController getLeftSlave() { return this.leftSlave; }
   public WPI_TalonSRX getRightMaster() { return this.rightMaster; }
-  public WPI_VictorSPX getRightSlave() { return this.rightSlave; }
+  public BaseMotorController  getRightSlave() { return this.rightSlave; }
   
   public SpeedControllerGroup getLeftSide() { return this.leftSide; }
   public SpeedControllerGroup getRightSide() { return this.rightSide; }

@@ -8,10 +8,11 @@
 //frc.robot.commands or frc.robot.commands.drivetraincommands
 package frc.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;//import TalonSRX motor
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.XboxController;//wpilibj
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,8 +22,8 @@ public class TeleOpTankDrive extends CommandBase {
   private DriveTrainSubsystem driveTrain;
   private WPI_TalonSRX rightMaster;
   private WPI_TalonSRX leftMaster;
-  private WPI_VictorSPX rightSlave;
-  private WPI_VictorSPX leftSlave;
+  private BaseMotorController rightSlave;
+  private BaseMotorController leftSlave;
   private XboxController controller;
   private int count, interval;
 
@@ -46,6 +47,8 @@ public class TeleOpTankDrive extends CommandBase {
     driveTrain.invertMotor();
     initTalon(rightMaster);
     initTalon(leftMaster);
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
+
   }
 
   private void initTalon(BaseMotorController talon) {
@@ -82,7 +85,7 @@ public class TeleOpTankDrive extends CommandBase {
     if (count++ >= interval) {
         //ReportHelper.reportTeleOp(leftMaster, "Left Master"); //TODO: create ReportHelper?
         //ReportHelper.reportTeleOp(rightMaster, "Right Master");
-        System.out.println();
+        System.out.println("leftMaster: " + driveTrain.getLeftMaster().getSelectedSensorPosition());
         count = 0;
     }
 }

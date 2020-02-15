@@ -32,9 +32,9 @@ public final class Constants {
   public static int kTimeoutMs = 0;
   public static int kPIDLoopIdx = 0;
   public static class kGains_Velocity{
-    public static double kF = 0;
-    public static double kP = 0;
+    public static double kF = 0.32;
+    public static double kP = 0.09;
     public static double kI = 0;
-    public static double kD = 0;
+    public static double kD = 0.01;
   }
 }
