@@ -59,6 +59,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftSide.set(adjustSpeed(leftSpeed));
     rightSide.set(adjustSpeed(rightSpeed));
   }
+  
+  public void visionDrive(double leftSpeed, double rightSpeed) {
+    leftSide.set(leftSpeed);
+    rightSide.set(rightSpeed);
+  }
 
   private double adjustSpeed(double d) {
     if (Math.abs(d) < 0.03) return 0;

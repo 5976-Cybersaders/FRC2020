@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.XBoxButton.RawButton;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.MasterSlaveTestCommand;
+import frc.robot.commands.SnapToTargetCommand;
 import frc.robot.commands.TeleOpTankDrive;
 import frc.robot.commands.autonomous.AutoShootHighThenCrossLineCommand;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -41,6 +43,7 @@ public class RobotContainer {
   private final boolean intakeEnabled = false;
   private final boolean shooterPositionEnabled = false;
   private final boolean shooterEnabled = false;
+  private final boolean cameraEnabled = true;
   private final boolean masterSlaveTestEnabled = true;
 
   private final ClimberSubsystem climberSubsystem;
@@ -49,6 +52,7 @@ public class RobotContainer {
   private final ShooterPositionSubsystem shooterPositionSubsystem;
   private final ShooterSubsystem shooterSubsystem;
   private final MasterSlaveTestSubsystem testSubsystem;
+  private final CameraSubsystem cameraSubsystem;
 
   private final AutoShootHighThenCrossLineCommand autoShootHighThenCrossLineCommand = new AutoShootHighThenCrossLineCommand();
 
@@ -83,6 +87,11 @@ public class RobotContainer {
     } else {
       shooterSubsystem = null;
     }
+    if (cameraEnabled) {
+      cameraSubsystem= new CameraSubsystem();
+    } else {
+      cameraSubsystem = null;
+    }
     if (masterSlaveTestEnabled) {
       testSubsystem = new MasterSlaveTestSubsystem();
     } else {
@@ -102,9 +111,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
     if (masterSlaveTestEnabled) {
       XBoxButton testButton = new XBoxButton(primaryController, RawButton.Y);
-      Command c = new MasterSlaveTestCommand(testSubsystem, 400);
+      Command c = new MasterSlaveTestCommand(testSubsystem);
       testButton.whileHeld(c);
       System.out.println("bound successfully");
+    }
+    if (driveTrainEnabled && cameraEnabled ){
+      XBoxButton testButton = new XBoxButton(primaryController, RawButton.X);
+      Command c = new SnapToTargetCommand(driveTrainSubsystem, cameraSubsystem,0);
+      testButton.whileHeld(c);
     }
   }
 

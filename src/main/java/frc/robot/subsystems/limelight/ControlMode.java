@@ -19,7 +19,7 @@ public class ControlMode {
         kpipeLine(0),   //0	use the LED Mode set in the current pipeline
         kforceOff(1),   //1	force off
         kforceBlink(2), //2	force blink
-        kforceOn(1);    //3	force on 
+        kforceOn(3);    //3	force on 
 
         private static final Map<Double, LedMode> MY_MAP = new HashMap<Double, LedMode>();
         
@@ -82,10 +82,11 @@ public class ControlMode {
     }
 
     public enum StreamType {
-        kStandard(1),
-        kPiPMain(1),
-        kPiPSecondary(2),
-        kPiPChangeable(2);
+        kStandard(0),
+        kPiPMain(0),
+        kPiPSecondary(0),
+        kPiPChangeable(0);
+        //Change secondary and changeable back to 2
     
         private static final Map<Double,  StreamType> MY_MAP = new HashMap<Double,  StreamType>();
         

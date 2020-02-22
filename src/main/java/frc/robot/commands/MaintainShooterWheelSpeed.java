@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.SmartDashboardMap;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class MaintainShooterWheelSpeed extends CommandBase {
@@ -80,10 +81,14 @@ public class MaintainShooterWheelSpeed extends CommandBase {
 
 		/* Config the Velocity closed loop gains in slot0 */
 
-		talon.config_kF(Constants.kPIDLoopIdx, Constants.kGains_Velocity.kF, Constants.kTimeoutMs);
-		talon.config_kP(Constants.kPIDLoopIdx, Constants.kGains_Velocity.kP, Constants.kTimeoutMs);
-		talon.config_kI(Constants.kPIDLoopIdx, Constants.kGains_Velocity.kI, Constants.kTimeoutMs);
-		talon.config_kD(Constants.kPIDLoopIdx, Constants.kGains_Velocity.kD, Constants.kTimeoutMs);
+    double kP = SmartDashboardMap.SHOOTER_kP.getValue();
+    double kI = SmartDashboardMap.SHOOTER_kI.getValue();
+    double kD = SmartDashboardMap.SHOOTER_kD.getValue();
+    double kF = SmartDashboardMap.SHOOTER_kF.getValue();
+		talon.config_kF(Constants.kPIDLoopIdx, kF, Constants.kTimeoutMs);
+		talon.config_kP(Constants.kPIDLoopIdx, kP, Constants.kTimeoutMs);
+		talon.config_kI(Constants.kPIDLoopIdx, kI, Constants.kTimeoutMs);
+		talon.config_kD(Constants.kPIDLoopIdx, kD, Constants.kTimeoutMs);
   }
 
 

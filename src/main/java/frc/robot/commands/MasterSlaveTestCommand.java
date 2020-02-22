@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.SmartDashboardMap;
 import frc.robot.subsystems.MasterSlaveTestSubsystem;
 
 public class MasterSlaveTestCommand extends CommandBase {
@@ -26,15 +27,15 @@ public class MasterSlaveTestCommand extends CommandBase {
   private double resetCounter = 0, pastPosition = 0, totalPosition;
   private long pastTimeMs = 0;
   
-  public MasterSlaveTestCommand(MasterSlaveTestSubsystem testSubsystem, double desiredVelocity) {
+  public MasterSlaveTestCommand(MasterSlaveTestSubsystem testSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.testSubsystem = testSubsystem;
-    this.desiredVelocity = desiredVelocity;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    desiredVelocity = SmartDashboardMap.SHOOTER_TARGET_SPEED_RPM.getValue();
     targetVelocityUnitsPer100ms = desiredVelocity * 4096 / 600;
     initTalon(testSubsystem.getMaster());
     testSubsystem.getMaster().setSelectedSensorPosition(0);
@@ -54,6 +55,8 @@ public class MasterSlaveTestCommand extends CommandBase {
     long currentTimeMs = System.currentTimeMillis();
     double rpm = ((currentPosition-pastPosition)/4096)*(60000/(currentTimeMs-pastTimeMs));
     System.out.println("leftMaster: " + currentPosition + "  " + testSubsystem.getMaster().getSelectedSensorVelocity() + "       "+ testSubsystem.getMaster().getClosedLoopError(0)+ " rpm="+ rpm);
+    SmartDashboardMap.SHOOTER_SPEED_RPM.putNumber(rpm);
+    SmartDashboardMap.SHOOTER_ENCODER_POSITION.putNumber(currentPosition);
     if (currentPosition < pastPosition) {
       resetCounter++;
       totalPosition += pastPosition;
@@ -91,17 +94,24 @@ public class MasterSlaveTestCommand extends CommandBase {
 
 		/* Config the peak and nominal outputs */
 
-		talon.configNominalOutputForward(0.075, Constants.kTimeoutMs);
-		talon.configNominalOutputReverse(-0.075, Constants.kTimeoutMs);
-		talon.configPeakOutputForward(1, Constants.kTimeoutMs);
-    talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
-    talon.configAllowableClosedloopError(0, 500);
+    double nominalVoltage = SmartDashboardMap.SHOOTER_NOMINAL_VOLTAGE.getValue();
+    double peakVoltage = SmartDashboardMap.SHOOTER_PEAK_VOLTAGE.getValue();
+    double allowableError = SmartDashboardMap.SHOOTER_ALLOWABLE_ERROR.getValue();
+		talon.configNominalOutputForward(nominalVoltage, Constants.kTimeoutMs);
+		talon.configNominalOutputReverse(-nominalVoltage, Constants.kTimeoutMs);
+		talon.configPeakOutputForward(peakVoltage, Constants.kTimeoutMs);
+    talon.configPeakOutputReverse(-peakVoltage, Constants.kTimeoutMs);
+    talon.configAllowableClosedloopError(0, (int)allowableError);
 
 		/* Config the Velocity closed loop gains in slot0 */
 
-		talon.config_kF(Constants.kPIDLoopIdx, Constants.kGains_Velocity.kF, Constants.kTimeoutMs);
-		talon.config_kP(Constants.kPIDLoopIdx, Constants.kGains_Velocity.kP, Constants.kTimeoutMs);
-		talon.config_kI(Constants.kPIDLoopIdx, Constants.kGains_Velocity.kI, Constants.kTimeoutMs);
-		talon.config_kD(Constants.kPIDLoopIdx, Constants.kGains_Velocity.kD, Constants.kTimeoutMs);
+    double kP = SmartDashboardMap.SHOOTER_kP.getValue();
+    double kI = SmartDashboardMap.SHOOTER_kI.getValue();
+    double kD = SmartDashboardMap.SHOOTER_kD.getValue();
+    double kF = SmartDashboardMap.SHOOTER_kF.getValue();
+		talon.config_kF(Constants.kPIDLoopIdx, kF, Constants.kTimeoutMs);
+		talon.config_kP(Constants.kPIDLoopIdx, kP, Constants.kTimeoutMs);
+		talon.config_kI(Constants.kPIDLoopIdx, kI, Constants.kTimeoutMs);
+		talon.config_kD(Constants.kPIDLoopIdx, kD, Constants.kTimeoutMs);
   }
 }
