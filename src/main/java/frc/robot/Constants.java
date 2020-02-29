@@ -22,12 +22,10 @@ public final class Constants {
   public static int LEFT_SLAVE_TALON_ID = 1;
   public static int RIGHT_MASTER_TALON_ID = 4;
   public static int RIGHT_SLAVE_TALON_ID = 3;
-  public static int SHOOTER_FEED_TALON_ID = 5;
-  public static int SHOOTER_POSITIONER_TALON_ID = 6;
+  public static int UPPER_SHOOTER_TALON_ID = 5;
+  public static int LOWER_SHOOTER_TALON_ID = 6;
   public static int INTAKE_TALON_ID = 7;
-  public static int INTAKE_CONVEYOR_TALON_ID = 8;
-  public static int CLIMBER_ARM_TALON_ID = 9;
-  public static int CLIMBER_LIFT_TALON_ID = 10;
+  public static int CONVEYOR_TALON_ID = 8;
   
   public static int kTimeoutMs = 0;
   public static int kPIDLoopIdx = 0;

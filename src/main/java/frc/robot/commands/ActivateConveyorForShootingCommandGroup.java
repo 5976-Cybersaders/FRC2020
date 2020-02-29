@@ -7,19 +7,19 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.MotorBasedSubsystem;;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.MotorBasedSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class IntakeCommandGroup extends ParallelCommandGroup {
+public class ActivateConveyorForShootingCommandGroup extends SequentialCommandGroup {
   /**
-   * Creates a new IntakeCommandGroup.
+   * Creates a new ActivateConveyorForShootingCommandGroup.
    */
-  public IntakeCommandGroup(MotorBasedSubsystem intakeSubsystem, MotorBasedSubsystem convSubsystem) {
-
-    super(new ActivateMotorCommand(intakeSubsystem, 0.5), new ActivateMotorCommand(convSubsystem, 0.5));
-
+  public ActivateConveyorForShootingCommandGroup(MotorBasedSubsystem conveyorSubsystem, long moveForwardTimeMS) {
+    // Add your commands in the super() call, e.g.
+    // super(new FooCommand(), new BarCommand());
+    super(new ActivateMotorCommand(conveyorSubsystem, 0.0, 500l), new ActivateMotorCommand(conveyorSubsystem, 0.5, moveForwardTimeMS));
   }
 }

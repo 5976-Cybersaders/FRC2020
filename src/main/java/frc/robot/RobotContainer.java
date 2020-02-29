@@ -7,25 +7,23 @@
 
 package frc.robot;
 
-import java.util.function.Consumer;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.XBoxButton.RawButton;
-import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.IntakeCommandGroup;
 import frc.robot.commands.MasterSlaveTestCommand;
+import frc.robot.commands.ShootCommandGroup;
 import frc.robot.commands.SnapToTargetCommand;
 import frc.robot.commands.TeleOpTankDrive;
 import frc.robot.commands.autonomous.AutoShootHighThenCrossLineCommand;
 import frc.robot.subsystems.CameraSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.MasterSlaveTestSubsystem;
-import frc.robot.subsystems.ShooterPositionSubsystem;
+import frc.robot.subsystems.MotorBasedSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -38,18 +36,16 @@ public class RobotContainer {
 
   private final XboxController primaryController = new XboxController(0);
   private final XboxController secondaryController = new XboxController(1);
-  private final boolean driveTrainEnabled = false;
-  private final boolean climberEnabled = false;
-  private final boolean intakeEnabled = false;
-  private final boolean shooterPositionEnabled = false;
-  private final boolean shooterEnabled = false;
   private final boolean cameraEnabled = true;
-  private final boolean masterSlaveTestEnabled = true;
+  private final boolean conveyorEnabled = true;
+  private final boolean driveTrainEnabled = true;
+  private final boolean intakeEnabled = true;
+  private final boolean shooterEnabled = false;
+  private final boolean masterSlaveTestEnabled = false;
 
-  private final ClimberSubsystem climberSubsystem;
   private final DriveTrainSubsystem driveTrainSubsystem;
-  private final IntakeSubsystem intakeSubsystem;
-  private final ShooterPositionSubsystem shooterPositionSubsystem;
+  private final MotorBasedSubsystem conveyorSubsystem;
+  private final MotorBasedSubsystem intakeSubsystem;
   private final ShooterSubsystem shooterSubsystem;
   private final MasterSlaveTestSubsystem testSubsystem;
   private final CameraSubsystem cameraSubsystem;
@@ -67,20 +63,10 @@ public class RobotContainer {
     } else {
       driveTrainSubsystem = null;
     }
-    if (climberEnabled) {
-      climberSubsystem= new ClimberSubsystem();
-    } else {
-      climberSubsystem = null;
-    }
     if (intakeEnabled) {
-      intakeSubsystem= new IntakeSubsystem();
+      intakeSubsystem= new MotorBasedSubsystem(Constants.INTAKE_TALON_ID);
     } else {
       intakeSubsystem = null;
-    }
-    if (shooterPositionEnabled) {
-      shooterPositionSubsystem= new ShooterPositionSubsystem();
-    } else {
-      shooterPositionSubsystem = null;
     }
     if (shooterEnabled) {
       shooterSubsystem= new ShooterSubsystem();
@@ -97,6 +83,11 @@ public class RobotContainer {
     } else {
       testSubsystem = null;
     }
+    if (conveyorEnabled) {
+      conveyorSubsystem = new MotorBasedSubsystem(Constants.CONVEYOR_TALON_ID);
+    } else {
+      conveyorSubsystem = null;
+    }
     
     configureButtonBindings();
   }
@@ -110,15 +101,24 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     if (masterSlaveTestEnabled) {
-      XBoxButton testButton = new XBoxButton(primaryController, RawButton.Y);
+      XBoxButton button = new XBoxButton(primaryController, RawButton.Y);
       Command c = new MasterSlaveTestCommand(testSubsystem);
-      testButton.whileHeld(c);
-      System.out.println("bound successfully");
+      button.whileHeld(c);
     }
     if (driveTrainEnabled && cameraEnabled ){
-      XBoxButton testButton = new XBoxButton(primaryController, RawButton.X);
+      XBoxButton button = new XBoxButton(primaryController, RawButton.X);
       Command c = new SnapToTargetCommand(driveTrainSubsystem, cameraSubsystem,0);
-      testButton.whileHeld(c);
+      button.whileHeld(c);
+    }
+    if (conveyorEnabled && intakeEnabled ) {
+      XBoxTrigger button = new XBoxTrigger(primaryController, Hand.kRight);
+      Command c = new IntakeCommandGroup(intakeSubsystem, conveyorSubsystem);
+      button.whileActiveOnce(c);
+    }
+    if (shooterEnabled && driveTrainEnabled && cameraEnabled && conveyorEnabled) {
+      XBoxTrigger button = new XBoxTrigger(primaryController, Hand.kLeft);
+      Command c = new ShootCommandGroup(driveTrainSubsystem, cameraSubsystem, conveyorSubsystem);
+      button.whileActiveOnce(c);
     }
   }
 

@@ -7,7 +7,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.MotorBasedSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -16,9 +21,20 @@ public class ShootCommandGroup extends SequentialCommandGroup {
   /**
    * Creates a new ShootCommandGroup.
    */
-  public ShootCommandGroup() {
+  public ShootCommandGroup(
+    DriveTrainSubsystem driveTrainSubsystem, 
+    CameraSubsystem cameraSubsystem, 
+    MotorBasedSubsystem conveyorSubsystem, 
+    long moveForwardTimeMS
+  ) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super();
+    super(
+      new SnapToTargetCommand(driveTrainSubsystem, cameraSubsystem, 0),
+      new ParallelRaceGroup(
+        new ActivateConveyorForShootingCommandGroup(conveyorSubsystem, moveForwardTimeMS)//,
+        // new SpinMotorCommand()
+      )
+    );
   }
 }
