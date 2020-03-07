@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 //start initializing right HERE
 public class DriveTrainSubsystem extends SubsystemBase {
 
+  private boolean isInitilized = false;
   private WPI_TalonSRX rightMaster, leftMaster;
   private BaseMotorController rightSlave, leftSlave;
   //private WPI_VictorSPX rightSlave, leftSlave;
@@ -78,8 +80,26 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public SpeedControllerGroup getLeftSide() { return this.leftSide; }
   public SpeedControllerGroup getRightSide() { return this.rightSide; }
 
+  public void initialize() {
+    if (! isInitilized){
+      System.out.println("Drive train initializing!!!");
+      invertMotor();
+      initTalon(rightMaster);
+      initTalon(leftMaster);
+      leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
+      isInitilized = true;
+    }
+  }
 
-  public void invertMotor() {
+  private void initTalon(BaseMotorController talon) {
+    talon.selectProfileSlot(1, 0);
+    talon.configPeakOutputForward(1, 0);
+    talon.configPeakOutputReverse(-1, 0);
+    talon.configNominalOutputForward(0, 0);
+    talon.configNominalOutputReverse(0, 0);
+  }
+
+  private void invertMotor() {
 
     List<BaseMotorController> talonsToInvert = rightControllers, talonsToNotInvert = leftControllers;
 

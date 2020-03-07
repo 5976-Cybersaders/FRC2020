@@ -24,9 +24,17 @@ public class SmartDashboardMap {
     public static final JudanValue SHOOTER_PEAK_VOLTAGE = makeValue("Shooter Peak Voltage", 1);
     public static final JudanValue SHOOTER_NOMINAL_VOLTAGE = makeValue("Shooter Nominal Voltage", 0.075);
 
-    public static final JudanValue SHOOTER_ENCODER_POSITION = makeValue("Shooter Encoder Position", 0);
-    public static final JudanValue SHOOTER_SPEED_RPM = makeValue("Shooter Speed RPM", 0);
-    public static final JudanValue SHOOTER_TARGET_SPEED_RPM = makeValue("Shooter Target Speed RPM", 400);
+    public static final JudanValue UPPER_SHOOTER_ENCODER_POSITION = makeValue("Upper Enc Pos", 0);
+    public static final JudanValue UPPER_SHOOTER_SPEED_RPM = makeValue("Upper RPM", 0);
+    public static final JudanValue UPPER_SHOOTER_TARGET_SPEED_RPM = makeValue("Upper Target RPM", 400);
+    public static final JudanValue LOWER_SHOOTER_ENCODER_POSITION = makeValue("Lower Enc Pos", 0);
+    public static final JudanValue LOWER_SHOOTER_SPEED_RPM = makeValue("Lower RPM", 0);
+    public static final JudanValue LOWER_SHOOTER_TARGET_SPEED_RPM = makeValue("Lower Target RPM", 400);
+
+    // These are just used in master slave test command
+    public static final JudanValue TEST_SHOOTER_ENCODER_POSITION = makeValue("Shooter Encoder Position", 0);
+    public static final JudanValue TEST_SHOOTER_SPEED_RPM = makeValue("Shooter Speed RPM", 0);
+    public static final JudanValue TEST_SHOOTER_TARGET_SPEED_RPM = makeValue("Shooter Target Speed RPM", 400);
 
     // Vision
     // Used to determine when snapping is complete.  We need 'n' iterations where Tx is w/in +/- this value in degrees.

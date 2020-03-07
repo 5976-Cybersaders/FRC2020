@@ -35,7 +35,7 @@ public class MasterSlaveTestCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    desiredVelocity = SmartDashboardMap.SHOOTER_TARGET_SPEED_RPM.getValue();
+    desiredVelocity = SmartDashboardMap.TEST_SHOOTER_TARGET_SPEED_RPM.getValue();
     targetVelocityUnitsPer100ms = desiredVelocity * 4096 / 600;
     initTalon(testSubsystem.getMaster());
     testSubsystem.getMaster().setSelectedSensorPosition(0);
@@ -55,8 +55,8 @@ public class MasterSlaveTestCommand extends CommandBase {
     long currentTimeMs = System.currentTimeMillis();
     double rpm = ((currentPosition-pastPosition)/4096)*(60000/(currentTimeMs-pastTimeMs));
     System.out.println("leftMaster: " + currentPosition + "  " + testSubsystem.getMaster().getSelectedSensorVelocity() + "       "+ testSubsystem.getMaster().getClosedLoopError(0)+ " rpm="+ rpm);
-    SmartDashboardMap.SHOOTER_SPEED_RPM.putNumber(rpm);
-    SmartDashboardMap.SHOOTER_ENCODER_POSITION.putNumber(currentPosition);
+    SmartDashboardMap.TEST_SHOOTER_SPEED_RPM.putNumber(rpm);
+    SmartDashboardMap.TEST_SHOOTER_ENCODER_POSITION.putNumber(currentPosition);
     if (currentPosition < pastPosition) {
       resetCounter++;
       totalPosition += pastPosition;

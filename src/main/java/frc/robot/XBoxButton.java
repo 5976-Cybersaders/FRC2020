@@ -33,7 +33,7 @@ public class XBoxButton extends Button{
         public static final int B = 2;
         public static final int X = 3;
         public static final int Y = 4;
-        public static final Hand LB = 5;
+        public static final int LB = 5;
         public static final int RB = 6;
         public static final int BACK_BUTTON = 7;
         public static final int START_BUTTON = 8;

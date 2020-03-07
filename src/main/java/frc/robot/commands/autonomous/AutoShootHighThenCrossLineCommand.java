@@ -8,6 +8,11 @@
 package frc.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.ShootCommandGroup;
+import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.MotorBasedSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -15,10 +20,22 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class AutoShootHighThenCrossLineCommand extends SequentialCommandGroup {
   /**
    * Creates a new AutoShootThenCrossLineCommand.
+ * @param leftDriveSpeed 
    */
-  public AutoShootHighThenCrossLineCommand() {
+  public AutoShootHighThenCrossLineCommand( 
+    ShooterSubsystem shooterSubsystem, 
+    DriveTrainSubsystem driveTrainSubsystem, 
+    CameraSubsystem cameraSubsystem, 
+    MotorBasedSubsystem conveyorSubsystem, 
+    long moveConveyorForwardTimeMS,
+    double upperShooterRpm, double lowerShooterRpm,
+    double leftDriveSpeed, double rightDriveSpeed, long driveTimeMs) {
+
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super();
+    super(
+      new ShootCommandGroup(shooterSubsystem, driveTrainSubsystem, cameraSubsystem, conveyorSubsystem, moveConveyorForwardTimeMS, upperShooterRpm, lowerShooterRpm),
+      new AutoDriveCommand(driveTrainSubsystem, leftDriveSpeed, rightDriveSpeed, driveTimeMs)
+    );
   }
 }

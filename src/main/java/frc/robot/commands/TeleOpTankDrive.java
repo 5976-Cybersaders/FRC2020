@@ -44,19 +44,7 @@ public class TeleOpTankDrive extends CommandBase {
   @Override
   public void initialize() {
     System.out.println("Drive train STARTING!!!");
-    driveTrain.invertMotor();
-    initTalon(rightMaster);
-    initTalon(leftMaster);
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
-
-  }
-
-  private void initTalon(BaseMotorController talon) {
-    talon.selectProfileSlot(1, 0);
-    talon.configPeakOutputForward(1, 0);
-    talon.configPeakOutputReverse(-1, 0);
-    talon.configNominalOutputForward(0, 0);
-    talon.configNominalOutputReverse(0, 0);
+    driveTrain.initialize();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

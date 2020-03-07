@@ -36,10 +36,10 @@ public class RobotContainer {
 
   private final XboxController primaryController = new XboxController(0);
   private final XboxController secondaryController = new XboxController(1);
-  private final boolean cameraEnabled = true;
-  private final boolean conveyorEnabled = true;
   private final boolean driveTrainEnabled = true;
-  private final boolean intakeEnabled = true;
+  private final boolean cameraEnabled = true;
+  private final boolean conveyorEnabled = false;
+  private final boolean intakeEnabled = false;
   private final boolean shooterEnabled = false;
   private final boolean masterSlaveTestEnabled = false;
 
@@ -50,7 +50,7 @@ public class RobotContainer {
   private final MasterSlaveTestSubsystem testSubsystem;
   private final CameraSubsystem cameraSubsystem;
 
-  private final AutoShootHighThenCrossLineCommand autoShootHighThenCrossLineCommand = new AutoShootHighThenCrossLineCommand();
+  private final AutoShootHighThenCrossLineCommand autoShootHighThenCrossLineCommand ;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -88,7 +88,19 @@ public class RobotContainer {
     } else {
       conveyorSubsystem = null;
     }
-    
+    if (driveTrainEnabled && cameraEnabled && shooterEnabled && conveyorEnabled) {
+      autoShootHighThenCrossLineCommand  = new AutoShootHighThenCrossLineCommand( 
+         shooterSubsystem, 
+         driveTrainSubsystem, 
+         cameraSubsystem, 
+         conveyorSubsystem, 
+         5000, //conveyorTime ms
+         SmartDashboardMap.UPPER_SHOOTER_TARGET_SPEED_RPM.getDouble(), //upperShooterRpm
+         SmartDashboardMap.LOWER_SHOOTER_TARGET_SPEED_RPM.getDouble(), //lowerShooterRpm
+         0.5, //leftDriveSpeed
+         0.5, //rightDriveSpeed 
+         5000); //driveTimeMs
+    } else autoShootHighThenCrossLineCommand = null;
     configureButtonBindings();
   }
 
@@ -117,7 +129,8 @@ public class RobotContainer {
     }
     if (shooterEnabled && driveTrainEnabled && cameraEnabled && conveyorEnabled) {
       XBoxTrigger button = new XBoxTrigger(primaryController, Hand.kLeft);
-      Command c = new ShootCommandGroup(driveTrainSubsystem, cameraSubsystem, conveyorSubsystem);
+      Command c = new ShootCommandGroup(shooterSubsystem, driveTrainSubsystem, cameraSubsystem, conveyorSubsystem, 0l,
+        SmartDashboardMap.UPPER_SHOOTER_TARGET_SPEED_RPM.getDouble(), SmartDashboardMap.LOWER_SHOOTER_TARGET_SPEED_RPM.getDouble());
       button.whileActiveOnce(c);
     }
   }
